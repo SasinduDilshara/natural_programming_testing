@@ -46,7 +46,7 @@ service /banks on new http:Listener(8080) {
     # Retrieves a specific bank by its address.
     # 
     # + bankId - ID of the bank to retrieve
-    # + return - The bank details or an error response
+    # + return - The bank details or an error response with message `Bank is not available`
     resource function get [string bankId]() returns Bank|ErrorResponse|error {
         sql:ParameterizedQuery query = `SELECT bank_id, bank_name, location 
                                       FROM Banks WHERE bank_id = ${bankId}`;
