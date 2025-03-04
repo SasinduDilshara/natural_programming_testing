@@ -141,12 +141,6 @@ service /banks on new http:Listener(8080) {
         return check dbClient->queryRow(selectQuery);
     }
 
-    # Withdraws money from a specific account.
-    # 
-    # + bankId - ID of the bank
-    # + accountId - ID of the account
-    # + txRequest - The transaction request containing the withdrawal amount
-    # + return - Updated account details or an error response
     resource function post [string bankId]/accounts/[string accountId]/withdraw(@http:Payload TransactionRequest txRequest)
             returns Account|ErrorResponse|error {
         decimal amount = txRequest.amount;

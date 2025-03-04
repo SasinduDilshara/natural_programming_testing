@@ -18,12 +18,6 @@ type BankCreationRequest record {|
     string location;
 |};
 
-# Represents a bank Book entity.
-# 
-# + accountId - Unique identifier for the account
-# + accountHolderName - Name of the account holder
-# + balance - Current balance in the account
-# + bankId - ID of the bank where the account is held
 type Account record {|
     string accountId;
     string accountHolderName;
@@ -47,10 +41,6 @@ type TransactionRequest record {|
     decimal amount;
 |};
 
-# Represents an error response from the API.
-# 
-# + message - Error message describing the issue
-# + errorCode - Unique error code for the specific error type
 type ErrorResponse record {|
     string message;
     string errorCode;
