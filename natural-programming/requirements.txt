@@ -1,1 +1,1 @@
- I need a simple student management application
+ I need a simple bank application
