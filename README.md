@@ -1,82 +1,77 @@
-# Banking System API
+# Order Management System API
 
-This is a simple banking system implemented using Ballerina. The system provides RESTful APIs for managing banks and accounts, including operations such as creating banks, opening accounts, making deposits, and withdrawals.
+This is a simple order management system implemented using Ballerina. The system provides RESTful APIs for managing orders and users.
 
 ## Features
-- Create and retrieve banks
-- Create and retrieve accounts
-- Deposit and withdraw funds from accounts
+- Create and manage orders
+- Get user specific orders
+- Update and delete orders
+- View all users
 
 ## API Endpoints
 
-### Banks
-- **Create a bank**: `POST /banks`
-- **Retrieve a bank**: `GET /banks/{bankId}`
-- **List all banks**: `GET /banks`
+### Orders
+- **Create an order**: `POST /orders`
+- **Update an order**: `PUT /orders/{orderId}`
+- **Delete an order**: `DELETE /orders/{orderId}`
+- **Get orders by user**: `GET /orders/users/{userId}`
+- **Get user orders**: `GET /users/{userId}/orders`
 
-### Accounts
-- **Create an account**: `POST /banks/{bankId}/accounts`
-- **Retrieve an account**: `GET /banks/{bankId}/accounts/{accountId}`
-- **List all accounts in a bank**: `GET /banks/{bankId}/accounts`
-
-### Transactions
-- **Deposit funds**: `POST /banks/{bankId}/accounts/{accountId}/deposit`
-- **Withdraw funds**: `POST /banks/{bankId}/accounts/{accountId}/withdraw`
+### Users
+- **Get all users**: `GET /users`
 
 ## Data Structures
 
-### Bank
+### Order
 ```json
 {
-  "bankId": "string",
-  "bankName": "string",
-  "location": "string"
+    "orderId": "string",
+    "userId": "string",
+    "items": [
+        {
+            "itemId": "string",
+            "quantity": "int",
+            "price": "decimal"
+        }
+    ],
+    "totalAmount": "decimal",
+    "status": "string"
 }
 ```
 
-### Account
+### OrderCreationRequest
 ```json
 {
-  "accountId": "string",
-  "accountHolderName": "string",
-  "balance": "number",
-  "bankId": "string"
+    "userId": "string",
+    "items": [
+        {
+            "itemId": "string",
+            "quantity": "int",
+            "price": "decimal"
+        }
+    ]
 }
 ```
 
-### BankCreationRequest
+### User
 ```json
 {
-  "bankName": "string",
-  "location": "string"
+    "userId": "string",
+    "userName": "string",
+    "email": "string"
 }
 ```
 
-### AccountCreationRequest
+## Error Response
 ```json
 {
-  "accountHolderName": "string",
-  "initialDeposit": "number"
-}
-```
-
-### TransactionRequest
-```json
-{
-  "amount": "number"
-}
-```
-
-## Error Responses
-```json
-{
-  "message": "string",
-  "errorCode": "string"
+    "message": "string",
+    "code": "string"
 }
 ```
 
 ## Running the Service
-Run the following command to start the banking service:
+Run the following command to start the order management service:
 ```sh
 bal run
 ```
@@ -85,4 +80,3 @@ The service will be available at `http://localhost:8080/`.
 
 ## License
 This project is licensed under the MIT License.
-

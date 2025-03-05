@@ -52,7 +52,7 @@ service on new http:Listener(8080) {
                     body: "Blog rejected due to low rating or no matching category"};
             }
 
-            _ = check db->execute(`INSERT INTO Blog (title, content, rating, category) VALUES (${
+            _ = db->execute(`INSERT INTO Blog (title, content, rating, category) VALUES (${
                                             title}, ${content}, ${rating}, ${suggestedCategory})`);
             return <http:Created> {body: "Blog accepted"};            
         } on fail {
