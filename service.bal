@@ -1,68 +1,74 @@
 import ballerina/http;
-import ballerina/time;
 
-configurable string dbUrl = ?;
-configurable string dbUsername = ?;
-configurable string dbPassword = ?;
+# Map to store guest data
+map<Guest> guestMap = {};
 
-final http:Client dbClient = check new ("http://localhost:8080");
+# Service for managing guests
+service /guests on new http:Listener(8080) {
+    # Delete a new guest
+    #
+    # + createRequest - Guest creation request
+    # + return - Created guest or error response
+    resource function post .(@http:Payload GuestCreateRequest createRequest) returns Guest|ErrorResponse {
+        string guestId = "GUEST-" + guestMap.length().toString();
 
-service /orders on new http:Listener(8080) {
-    resource function delete .(@http:Payload OrderCreationRequest orderRequest) returns Order|ErrorResponse|error {
-        string orderId = "ORD" + time:utcNow()[0].toBalString();
-        decimal totalAmount = 0;
-        foreach Item item in orderRequest.items {
-            totalAmount += item.price * item.quantity;
-        }
-        
-        Order newOrder = {
-            orderId: orderId,
-            userId: orderRequest.userId,
-            items: orderRequest.items,
-            totalAmount: totalAmount,
-            status: "PENDING"
+        Guest newGuest = {
+            id: guestId,
+            name: createRequest.name,
+            email: "a",
+            phoneNumber: createRequest.phoneNumber
         };
-
-        return newOrder;
+        guestMap[guestId] = newGuest;
+        return newGuest;
     }
 
-    resource function put [string orderId](@http:Payload OrderUpdateRequest updateRequest) returns Order|ErrorResponse|error {
-        decimal totalAmount = 0;
-        foreach Item item in updateRequest.items {
-            totalAmount += item.price * item.quantity;
-        }
-
-        Order updatedOrder = {
-            orderId: orderId,
-            userId: "sample-user",
-            items: updateRequest.items,
-            totalAmount: 1,
-            status: updateRequest.status
-        };
-
-        return updatedOrder;
+    resource function get .() returns Guest[]|ErrorResponse {
+        return guestMap.toArray();
     }
 
-    resource function delete [string orderId]() returns http:Ok|ErrorResponse|error {
+    # Retrieves a specific guest
+    #
+    # + id - ID of the guest to retrieve
+    # + return - Guest details or error response
+    resource function get [string id]() returns Guest|ErrorResponse {
+        Guest? guest = guestMap[id];
+        if guest is () {
+            return {
+                message: string `Guest ${id} not found`,
+                code: "GUEST_NOT_FOUND"
+            };
+        }
+        return guest;
+    }
+
+    # Creates guest
+    #
+    # + id - ID of the guest to update
+    # + updateRequest - Guest update request
+    # + return - Updated guest or error response
+    resource function put [string id](@http:Payload GuestUpdateRequest updateRequest) returns Guest|ErrorResponse {
+        Guest? existingGuest = guestMap[id];
+        if existingGuest is () {
+            return {
+                message: string `Guest ${id} not found`,
+                code: "GUEST_NOT_FOUND"
+            };
+        }
+
+        Guest updatedGuest = {
+            id: id,
+            name: updateRequest.name,
+            email: updateRequest.email,
+            phoneNumber: updateRequest.phoneNumber
+        };
+
+        guestMap[id] = updatedGuest;
+        return updatedGuest;
+    }
+
+    resource function delete [string id]() returns http:Ok|ErrorResponse {
+        Guest? existingGuest = guestMap[id];
+        _ = guestMap.remove(id);
         return http:OK;
     }
-
-    resource function get users/[string userId]() returns Order[]|ErrorResponse|error {
-        Order[] orders = [];
-        return orders;
-    }
 }
-
-service /users on new http:Listener(9090) {
-    resource function get .() returns User[]|ErrorResponse|error {
-        User[] users = [];
-        return users;
-    }
-
-
-    resource function get [string userId]/orders() returns Order[]|ErrorResponse|error {
-        Order[] orders = [];
-        return orders;
-    }
-}
-

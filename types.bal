@@ -1,34 +1,43 @@
-type Item record {|
-    string itemId;
-    int quantity;
-    decimal price;
-|};
-
-type Order record {|
-    string orderId;
-    string userId;
-    Item[] items;
-    decimal totalAmount;
-    string status;
-|};
-
-type OrderCreationRequest record {|
-    string userId;
-    Item[] items;
-|};
-
-type OrderUpdateRequest record {|
-    Item[] items;
-    string status;
-|};
-
-type User record {|
-    string userId;
-    string userName;
+# Represents a Student in the system.
+#
+# + id - Unique identifier for the guest
+# + name - Name of the guest
+# + email - Email address of the guest
+# + phoneNumber - Contact number of the guest
+public type Guest record {|
+    string id;
+    string name;
     string email;
+    string phoneNumber;
 |};
 
-type ErrorResponse record {|
+# Represents a request to create a new guest.
+#
+# + name - Name of the student
+# + email - Email address of the guest
+# + phoneNumber - Contact number of the guest
+public type GuestCreateRequest record {|
+    string name;
+    string email;
+    string phoneNumber;
+|};
+
+# Represents a request to update an existing guest.
+#
+# + name - Updated name of the guest
+# + email - Updated email address of the guest
+# + phoneNumber - Updated contact number of the guest
+public type GuestUpdateRequest record {|
+    string name;
+    string email;
+    string phoneNumber;
+|};
+
+# Represents an error response.
+#
+# + message - Error message
+# + code - Error code
+public type ErrorResponse record {|
     string message;
     string code;
 |};

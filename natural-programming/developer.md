@@ -1,0 +1,1 @@
+User wants a simple guest management service.
