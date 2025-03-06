@@ -1,43 +1,69 @@
-# Represents a Student in the system.
+# Represents a guest in the visitor management system.
 #
-# + id - Unique identifier for the guest
-# + name - Name of the guest
+# + guestId - Unique identifier for the guest
+# + firstName - First name of the guest
+# + lastName - Last name of the guest
 # + email - Email address of the guest
 # + phoneNumber - Contact number of the guest
+# + idType - Type of identification document (e.g., Passport, Driver's License)
+# + idNumber - Identification document number
 public type Guest record {|
-    string id;
-    string name;
+    string guestId;
+    string firstName;
+    string lastName;
     string email;
+    string phoneNumber;
+    string idType;
+    string idNumber;
+|};
+
+# Represents a host in the visitor management system.
+#
+# + hostId - Unique identifier for the host
+# + firstName - First name of the host
+# + lastName - Last name of the host
+# + email - Email address of the host
+# + department - Department where the host works
+# + phoneNumber - Contact number of the host
+public type Host record {|
+    string hostId;
+    string firstName;
+    string lastName;
+    string email;
+    string department;
     string phoneNumber;
 |};
 
-# Represents a request to create a new guest.
+# Represents a Student in the visitor management system.
 #
-# + name - Name of the student
-# + email - Email address of the guest
-# + phoneNumber - Contact number of the guest
-public type GuestCreateRequest record {|
-    string name;
-    string email;
-    string phoneNumber;
+# + visitId - Unique identifier for the visit
+# + guestId - Identifier of the guest making the visit
+# + hostId - Identifier of the host being visited
+# + purpose - Purpose of the visit
+# + checkInTime - Time when the visit started
+# + checkOutTime - Time when the visit ended (null if visit is ongoing)
+# + status - Current status of the visit (e.g., ACTIVE, COMPLETED)
+public type Visit record {|
+    string visitId;
+    string guestId;
+    string hostId;
+    string purpose;
+    string checkInTime;
+    string? checkOutTime;
+    string status;
 |};
 
-# Represents a request to update an existing guest.
+# Represents a visitor badge in the visitor management system.
 #
-# + name - Updated name of the guest
-# + email - Updated email address of the guest
-# + phoneNumber - Updated contact number of the guest
-public type GuestUpdateRequest record {|
-    string name;
-    string email;
-    string phoneNumber;
-|};
-
-# Represents an error response.
-#
-# + message - Error message
-# + code - Error code
-public type ErrorResponse record {|
-    string message;
-    string code;
+# + badgeId - Unique identifier for the badge
+# + visitId - Associated visit identifier
+# + guestName - Name of the guest
+# + hostName - Name of the host
+# + validUntil - Badge validity end time
+public type Badge record {|
+    string badgeId;
+    string visitId;
+    string guestName;
+    string hostName;
+    string validUntil;
 |};
