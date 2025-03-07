@@ -20,10 +20,6 @@ final jdbc:Client dbClient = check new (
     }
 );
 
-# Registers a new guest in the system.
-#
-# + guest - Guest record containing the visitor information
-# + return - Guest ID if registration is successful, error if operation fails
 public function registerGuest(Guest guest) returns string|error {
     sql:ParameterizedQuery query = `
         INSERT INTO guests (guest_id, first_name, last_name, email, phone_number, id_type, id_number)
@@ -65,10 +61,6 @@ public function checkOutVisitor(string visitId, string checkOutTime) returns err
     _ = check dbClient->execute(query);
 }
 
-# Generates a new visitor badge in the system.
-#
-# + badge - Badge record containing the badge details
-# + return - Badge guestName if generation is successful, error if operation fails
 public function generateBadge(Badge badge) returns string|error {
     sql:ParameterizedQuery query = `
         INSERT INTO badges (badge_id, visit_id, guest_name, host_name, valid_until)
@@ -101,9 +93,7 @@ public function getVisitDetails(string visitId) returns Visit|error {
     };
 }
 
-# Retrieves all active visits in the system.
-#
-# + return - active visit record
+
 public function getActiveVisits() returns Visit[]|error {
     sql:ParameterizedQuery query = `
         SELECT * FROM visits WHERE status = 'ACTIVE'
