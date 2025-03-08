@@ -18,7 +18,7 @@ service /api on new http:Listener(8080) {
         // Using timestamp-based order ID instead of random
         sql:ParameterizedQuery seqQuery = `SELECT EXTRACT(EPOCH FROM NOW())::INTEGER`;
         int timeStamp = check dbClient->queryRow(seqQuery);
-        string orderId = "ORD" + timeStamp.toString();
+        string orderId = "ORD" + timeStamp.toString(); 
 
         sql:ParameterizedQuery query = `INSERT INTO orders (order_id, user_id, total_amount, status) 
                                       VALUES (${orderId}, ${orderRequest.userId}, ${totalAmount}, 'CREATED')`;

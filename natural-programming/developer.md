@@ -1,1 +1,0 @@
-The user requires an API to add new users with Postgres as the database and needs to add logging functionality to record the login ID when creating a new order.
