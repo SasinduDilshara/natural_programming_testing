@@ -1,34 +1,34 @@
-// Record to represent an order item
-public type OrderItem record {|
-    string itemId;
-    int quantity;
-    decimal price;
+# Represents a claim submission request.
+#
+# + amount - The claim amount
+# + description - Description of the claim
+# + userId - ID of the user submitting the claim
+public type ClaimRequest record {|
+    decimal amount;
+    string description;
+    string userId;
 |};
 
-// Record to represent an order
-public type Order record {|
-    string orderId;
-    string userId;
-    OrderItem[] items;
-    decimal totalAmount;
+# Represents a claim in the system.
+#
+# + id - Unique identifier for the claim
+# + amount - The claim amount
+# + description - Description of the claim
+# + status - Current status of the claim
+# + userId - ID of the user who submitted the claim
+public type Claim record {|
+    string id;
+    decimal amount;
+    string description;
     string status;
-|};
-
-// Record to represent order creation request
-public type OrderCreationRequest record {|
     string userId;
-    OrderItem[] items;
 |};
 
-// Record to represent a user
-public type User record {|
+# Represents a claim status request.
+#
+# + claimId - ID of the claim to check
+# + userId - ID of the user requesting the status
+public type StatusRequest record {|
+    string claimId;
     string userId;
-    string userName;
-    string email;
-|};
-
-// Record to represent error response
-public type ErrorResponse record {|
-    string message;
-    string code;
 |};
