@@ -1,0 +1,1 @@
+The user needs to create a new API for security to communicate with residents using MySQL as the database for handling data.
