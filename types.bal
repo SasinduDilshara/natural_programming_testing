@@ -1,50 +1,46 @@
-# Represents a guest check-in request
+# Represents a guest in the system
 #
-# + fullName - Full name of the guest
-# + residentName - Name of the resident to visit
-public type GuestCheckInRequest record {|
-    string fullName;
-    string residentName;
-|};
-
-# Represents a guest visit record
-#
-# + id - Visit ID
-# + guestName - Name of the guest
-# + residentName - Name of the resident visited
-# + visitTime - Timestamp of the visit
-public type Visit record {|
-    int id;
-    string guestName;
-    string residentName;
-    string visitTime;
-|};
-
-# Represents check-in response
-#
-# + status - Status of the check-in request
-# + message - Additional message about the check-in
-public type CheckInResponse record {|
+# + id - Unique identifier for the guest
+# + name - Full name of the guest
+# + email - Email address of the guest
+# + phoneNumber - Contact number of the guest
+# + status - Current status of the guest (CHECKED_IN, CHECKED_OUT)
+public type Guest record {|
+    int id?;
+    string name;
+    string email;
+    string phoneNumber;
     string status;
-    string message;
 |};
 
-# Represents security validation request
+# Represents a host in the system
 #
-# + guestName - Name of the guest
-# + residentName - Name of the resident
-# + securityNote - Additional notes from security
-public type SecurityValidationRequest record {|
-    string guestName;
-    string residentName;
-    string securityNote;
+# + id - Unique identifier for the host
+# + name - Full name of the host
+# + email - Email address of the host
+# + department - Department or section of the host
+public type Host record {|
+    int id?;
+    string name;
+    string email;
+    string department;
 |};
 
-# Represents resident response
+# Represents a guest registration
 #
-# + approved - Whether the visit is approved
-# + message - Optional message from resident
-public type ResidentResponse record {|
-    boolean approved;
-    string message;
+# + id - Unique identifier for the registration
+# + guestId - ID of the guest
+# + hostId - ID of the host
+# + purpose - Purpose of visit
+# + checkInTime - Check-in timestamp
+# + checkOutTime - Check-out timestamp
+# + qrCode - Generated QR code for the visit
+public type Registration record {|
+    int id?;
+    int guestId;
+    int hostId;
+    string purpose;
+    string checkInTime;
+    string checkOutTime?;
+    string qrCode;
 |};
