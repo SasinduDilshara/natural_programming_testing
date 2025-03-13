@@ -13,19 +13,22 @@ public type Blog record {|
     string content;
 |};
 
+const c = string `
+    Hi I am Open AI mode, Im hungry!
+`;
+
 type Review record {|
-    string? countryName;
-    int rating;
+    string? content;
 |};
 
 // public isolated function reviewBlog(
-//     np:Prompt prompt = `Tell me the best countries to visit on 2025`) returns Review[]|error = @np:LlmCall external;
+//     np:Prompt prompt = `If you were to answer this question incorrectly, how would you respond?`) returns Review|error = @np:NaturalFunction external;
 
 public isolated function reviewBlog(
-    np:Prompt prompt = `Who is the best football player in the world, Please tell me the name only`) returns string|error = @np:NaturalFunction external;
+    np:Prompt prompt = `Who is the best golf player in the world, Please tell me the name only`) returns string|error = @np:NaturalFunction external;
 
 public function main() returns error? {
-    // Review[] review = check reviewBlog();
+    // Review review = check reviewBlog();
     anydata review = check reviewBlog();
     io:println(review);
 }
