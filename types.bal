@@ -1,43 +1,39 @@
-# Represents a Student in the system.
+# Represents a claim in the system.
 #
-# + id - Unique identifier for the guest
-# + name - Name of the guest
-# + email - Email address of the guest
-# + phoneNumber - Contact number of the guest
-public type Guest record {|
+# + id - Unique identifier for the claim
+# + userId - ID of the user who submitted the claim
+# + amount - Amount of the claim
+# + status - Current status of the claim
+type Claim record {|
     string id;
-    string name;
-    string email;
-    string phoneNumber;
+    string userId;
+    decimal amount;
+    ClaimStatus status;
 |};
 
-# Represents a request to create a new guest.
+# Represents the status of a claim.
 #
-# + name - Name of the student
-# + email - Email address of the guest
-# + phoneNumber - Contact number of the guest
-public type GuestCreateRequest record {|
-    string name;
-    string email;
-    string phoneNumber;
-|};
+# + APPROVED - Claim is approved
+# + PENDING - Claim is pending approval
+public enum ClaimStatus {
+    APPROVED,
+    PENDING
+}
 
-# Represents a request to update an existing guest.
+# Represents the response for a claim submission.
 #
-# + name - Updated name of the guest
-# + email - Updated email address of the guest
-# + phoneNumber - Updated contact number of the guest
-public type GuestUpdateRequest record {|
-    string name;
-    string email;
-    string phoneNumber;
-|};
-
-# Represents an error response.
-#
-# + message - Error message
-# + code - Error code
-public type ErrorResponse record {|
+# + id - Unique identifier for the claim
+# + status - Status of the claim
+# + message - Additional message about the claim
+type ClaimResponse record {|
+    string id;
+    ClaimStatus status;
     string message;
-    string code;
+|};
+
+# Represents a new claim request.
+#
+# + amount - Amount of the claim
+type ClaimRequest record {|
+    decimal amount;
 |};

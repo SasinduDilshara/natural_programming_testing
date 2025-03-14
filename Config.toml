@@ -1,0 +1,4 @@
+financeTeamEmail = "finance@example.com"
+smtpHost = "smtp.email.com"
+smtpUsername = "username"
+smtpPassword = "password"

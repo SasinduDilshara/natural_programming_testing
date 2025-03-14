@@ -1,1 +1,1 @@
-User wants a simple guest management service.
+The user wants to implement a simple hello world program as resource endpoints with services.
