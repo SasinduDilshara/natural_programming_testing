@@ -21,14 +21,21 @@ type Review record {|
     string? content;
 |};
 
-// public isolated function reviewBlog(
-//     np:Prompt prompt = `If you were to answer this question incorrectly, how would you respond?`) returns Review|error = @np:NaturalFunction external;
+type Country record {|
+    string name;
+|};
 
-public isolated function reviewBlog(
-    np:Prompt prompt = `Who is the best golf player in the world, Please tell me the name only`) returns string|error = @np:NaturalFunction external;
+public isolated function reviewCountries(
+    np:Prompt prompt = `Tell me top 10 countries to visit in 20205?`) returns Country[]|error = @np:NaturalFunction external;
+
+// [{"name":"Japan"},{"name":"Italy"},{"name":"New Zealand"},{"name":"Canada"},{"name":"Greece"},{"name":"Australia"},{"name":"Portugal"},{"name":"Iceland"},{"name":"Spain"},{"name":"Sweden"}]
+
+// public isolated function reviewBlog(
+//     np:Prompt prompt = `Who is the best golf player in the world, Please tell me the name only`) returns string|error = @np:NaturalFunction external;
 
 public function main() returns error? {
     // Review review = check reviewBlog();
-    anydata review = check reviewBlog();
-    io:println(review);
+    // anydata review = check reviewBlog();
+    Country[] c = check reviewCountries();
+    io:println(c);
 }
