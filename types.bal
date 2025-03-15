@@ -1,39 +1,37 @@
-# Represents a claim in the system.
-#
-# + id - Unique identifier for the claim
-# + userId - ID of the user who submitted the claim
-# + amount - Amount of the claim
-# + status - Current status of the claim
-type Claim record {|
+// Guest record with QR code
+public type Guest record {|
     string id;
-    string userId;
-    decimal amount;
-    ClaimStatus status;
+    string name;
+    string email;
+    string phoneNumber;
+    string qrCode;
 |};
 
-# Represents the status of a claim.
-#
-# + APPROVED - Claim is approved
-# + PENDING - Claim is pending approval
-public enum ClaimStatus {
-    APPROVED,
-    PENDING
-}
+// Guest create request
+public type GuestCreateRequest record {|
+    string name;
+    string email;
+    string phoneNumber;
+|};
 
-# Represents the response for a claim submission.
-#
-# + id - Unique identifier for the claim
-# + status - Status of the claim
-# + message - Additional message about the claim
-type ClaimResponse record {|
-    string id;
-    ClaimStatus status;
+// Guest update request
+public type GuestUpdateRequest record {|
+    string name;
+    string email;
+    string phoneNumber;
+|};
+
+// Error response record
+public type ErrorResponse record {|
     string message;
+    string code;
 |};
 
-# Represents a new claim request.
-#
-# + amount - Amount of the claim
-type ClaimRequest record {|
-    decimal amount;
+// Database guest record
+type DbGuest record {|
+    string id;
+    string name;
+    string email;
+    string phone_number;
+    string qr_code;
 |};

@@ -1,1 +1,1 @@
-The user wants to implement a simple hello world program as resource endpoints with services.
+Develop a system that utilizes MS SQL database for data persistence, with a requirement to send a single email to both the employee and the finance team instead of separate emails.

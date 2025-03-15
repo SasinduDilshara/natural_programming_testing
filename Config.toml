@@ -1,4 +1,6 @@
-financeTeamEmail = "finance@example.com"
-smtpHost = "smtp.email.com"
-smtpUsername = "username"
-smtpPassword = "password"
+[database]
+host = "localhost"
+port = 1433
+user = "sa"
+password = "your-password"
+database = "guest_db"
