@@ -1,1 +1,0 @@
-The user requires a simple hello world program.
