@@ -1,1 +1,0 @@
-User requires a program to determine zodiac signs, superseding the previous requirement for a hello world program.
