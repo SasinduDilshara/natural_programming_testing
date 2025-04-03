@@ -1,0 +1,14 @@
+# Student Management API.
+
+The system should provide an API to manage student information. It should include the following features and constraints:
+
+## Features
+1. Add a student with an id, name, and age.
+2. Retrieve student details by id.
+3. Delete a student by id.
+4. Return an error message for invalid operations.
+
+## Constraints
+id should be unique.
+name should be a string.
+age should be between 5 and 100.

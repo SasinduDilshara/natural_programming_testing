@@ -40,7 +40,6 @@ service /students on new http:Listener(8080) {
         }
     }
 
-    
     # Retrieves a student by ID.
     #
     # + id - The ID of the student to retrieve.
