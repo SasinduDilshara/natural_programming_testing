@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: Database Management System API
+  version: 1.0.0
+  description: Comprehensive Database Management System for Database Operations and Administration
+
+servers:
+  - url: https://api.dbmanager.com/v1
+    description: Production Database Management Server
+  - url: https://sandbox.dbmanager.com/v1
+    description: Sandbox Environment
+
+paths:
+  /databases:
+    post:
+      summary: Create a new database
+      operationId: createDatabase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseCreateRequest'
+      responses:
+        '201':
+          description: Database created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseResponse'
+        '400':
+          description: Invalid database creation request
+        '409':
+          description: Database already exists
+
+    get:
+      summary: List all databases
+      operationId: listDatabases
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Databases retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  databases:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DatabaseResponse'
+                  totalCount:
+                    type: integer
+
+  /databases/{databaseName}/tables:
+    post:
+      summary: Create a new table in a database
+      operationId: createTable
+      parameters:
+        - name: databaseName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TableCreateRequest'
+      responses:
+        '201':
+          description: Table created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        '400':
+          description: Invalid table creation request
+        '404':
+          description: Database not found
+
+    get:
+      summary: List tables in a database
+      operationId: listTables
+      parameters:
+        - name: databaseName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tables retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TableResponse'
+        '404':
+          description: Database not found
+
+  /query:
+    post:
+      summary: Execute a database query
+      operationId: executeQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Query executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Invalid query
+        '500':
+          description: Database execution error
+
+  /system/backup:
+    post:
+      summary: Create a database backup
+      operationId: createBackup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                databaseName:
+                  type: string
+                backupType:
+                  type: string
+                  enum: [FULL, INCREMENTAL]
+      responses:
+        '200':
+          description: Backup created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  backupId:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /system/restore:
+    post:
+      summary: Restore a database from backup
+      operationId: restoreDatabase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                backupId:
+                  type: string
+                databaseName:
+                  type: string
+      responses:
+        '200':
+          description: Database restored successfully
+        '404':
+          description: Backup not found
+
+components:
+  schemas:
+    DatabaseCreateRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [MYSQL, POSTGRESQL, MONGODB, SQLITE]
+        characterSet:
+          type: string
+          default: UTF8
+        collation:
+          type: string
+          default: UTF8_GENERAL_CI
+
+    DatabaseResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        size:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    TableCreateRequest:
+      type: object
+      required:
+        - name
+        - columns
+      properties:
+        name:
+          type: string
+        columns:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              nullable:
+                type: boolean
+              primaryKey:
+                type: boolean
+
+    TableResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        columns:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+
+    QueryRequest:
+      type: object
+      required:
+        - query
+        - databaseName
+      properties:
+        query:
+          type: string
+        databaseName:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: object
+
+    QueryResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+        rowCount:
+          type: integer
+        executionTime:
+          type: number
+          format: float
