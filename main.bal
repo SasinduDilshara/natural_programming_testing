@@ -1,39 +1,28 @@
 import ballerina/http;
-import ballerinax/java.jdbc;
-import ballerina/lang.runtime;
+import hello_bi.claims.impl;
 
-// Configurable variables
-configurable decimal claimLimit = 500.0;
+# Maximum claim amount that can be automatically approved without manual review
+configurable decimal claimLimit = 1500.0;
+
+# Email address for the finance team to handle manual claim approvals
 configurable string financeTeamEmail = "finance@example.com";
-configurable string dbUrl = "jdbc:h2:file:./claims";
-configurable string dbUsername = "sa";
-configurable string dbPassword = "";
 
-// Counter for claim ID generation
-int claimCounter = 0;
-
-// Initialize JDBC client
-final jdbc:Client dbClient = check new (
-    url = dbUrl,
-    user = dbUsername,
-    password = dbPassword
-);
-
+# Service to handle expense claim submissions and processing
 service /claims/add on new http:Listener(8080) {
-    // Submit a new claim
+    
+    # Processes a new expense claim submission
+    # + claim - The expense claim details to be processed
+    # + return - A ClaimResponse with submission status
     resource function post submit(@http:Payload Claim claim) returns ClaimResponse|error {
-        // Get total claims amount for the user
-        decimal totalAmount = check getTotalClaimsAmount(claim.userId);
+        decimal totalAmount = check impl:getTotalClaimsAmount(claim.userId);
         totalAmount += claim.amount;
 
-        // Generate claim ID
-        string claimId = generateClaimId();
+        string claimId = impl:generateClaimId(claim.claimId);
         claim.claimId = claimId;
 
         if totalAmount <= claimLimit {
             claim.status = "APPROVED";
-            // Store claim in database
-            _ = check dbClient->execute(`
+            _ = check impl:dbClient->execute(`
                 INSERT INTO claims (claim_id, user_id, amount, status, description)
                 VALUES (${claim.claimId}, ${claim.userId}, ${claim.amount}, ${claim.status}, ${claim.description})
             `);
@@ -45,14 +34,10 @@ service /claims/add on new http:Listener(8080) {
             };
         } else {
             claim.status = "PENDING";
-            // Store claim in database
-            _ = check dbClient->execute(`
+            _ = check impl:dbClient->execute(`
                 INSERT INTO claims (claim_id, user_id, amount, status, description)
                 VALUES (${claim.claimId}, ${claim.userId}, ${claim.amount}, ${claim.status}, ${claim.description})
             `);
-
-            // Note: Email sending functionality would be implemented here
-            // but is not included as it's not in the provided API docs
 
             return {
                 message: "Claim pending approval as it exceeds the pre-authorized limit. Finance team will contact you.",
@@ -61,23 +46,28 @@ service /claims/add on new http:Listener(8080) {
             };
         }
     }
-}
 
-// Function to get total claims amount for a user
-function getTotalClaimsAmount(string userId) returns decimal|error {
-    record {|decimal total;|} result = check dbClient->queryRow(`
-        SELECT COALESCE(SUM(amount), 0) as total 
-        FROM claims 
-        WHERE user_id = ${userId}
-    `);
-    return result.total;
-}
+    # Retrieves the status of a specific claim
+    # + claimId - The unique identifier of the claim
+    # + userId - The identifier of the user requesting the status
+    # + return - A StatusResponse with claim details or an error if retrieval fails
+    resource function get status/[string claimId](@http:Header string userId) returns StatusResponse|error {
+        Claim? claim = impl:generateClaim(claimId);
+        
+        if claim is () {
+            return {
+                message: "Claim not found",
+                claim: ()
+            };
+        }
 
-// Function to generate a unique claim ID
-function generateClaimId() returns string {
-    lock {
-        claimCounter += 1;
-        runtime:sleep(0.001); // Ensure unique counter
-        return string `CLAIM_${claimCounter}`;
+        if claim.userId != userId {
+            return error("Unauthorized access: You can only view your own claims");
+        }
+
+        return {
+            message: "Claim status retrieved successfully",
+            claim: claim
+        };
     }
 }

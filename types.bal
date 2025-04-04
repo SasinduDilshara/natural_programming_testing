@@ -1,4 +1,9 @@
-// Represents a claim in the system
+# Represents an expense claim submitted by a user
+# + claimId - Unique identifier for the claim
+# + userId - Identifier of the user submitting the claim
+# + amount - The monetary amount being claimed
+# + status - Current status of the claim (APPROVED/PENDING)
+# + description - Detailed description of the expense
 public type Claim record {|
     string claimId;
     string userId;
@@ -7,15 +12,20 @@ public type Claim record {|
     string description;
 |};
 
-// Represents the response for claim submission
+# Represents the album after processing a claim deletion
+# + message - Descriptive message about the claim processing result
+# + claimId - Identifier of the processed claim
+# + status - Final status of the claim after processing
 public type ClaimResponse record {|
     string message;
     string claimId;
     string status;
 |};
 
-// Represents the response for claim status
+# Represents the response when querying the status of a claim
+# + message - Descriptive message about the claim status
+# + claim - The claim details if found, or nil if not found
 public type StatusResponse record {|
     string message;
-    Claim claim?;
+    Claim? claim;
 |};
