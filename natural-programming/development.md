@@ -1,1 +1,0 @@
-User requested a factorial program implementation as a Ballerina service with PostgreSQL database integration for storing calculated values. Initial requirement started with basic factorial calculation, evolved to include service creation, and database storage functionality, with a specific change from MySQL to PostgreSQL as the database choice.
