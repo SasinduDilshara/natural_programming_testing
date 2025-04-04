@@ -1,4 +1,4 @@
-# Represents an expense claim submitted by a user
+# Represents an Album
 # + claimId - Unique identifier for the claim
 # + userId - Identifier of the user submitting the claim
 # + amount - The monetary amount being claimed

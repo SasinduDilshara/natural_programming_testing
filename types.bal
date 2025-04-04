@@ -12,10 +12,9 @@ public type Claim record {|
     string description;
 |};
 
-# Represents the album after processing a claim deletion
-# + message - Descriptive message about the claim processing result
-# + claimId - Identifier of the processed claim
-# + status - Final status of the claim after processing
+# Represents the response when querying the status of a claim
+# + message - Descriptive message about the claim status
+# + claim - The claim details if found, or nil if not found
 public type ClaimResponse record {|
     string message;
     string claimId;
