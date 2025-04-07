@@ -42,7 +42,7 @@ dbPassword = ""
 
 Submit a new expense claim for processing.
 
-**Endpoint:** POST `/claims/add/submit`
+**Endpoint:** POST `/students/add/submit`
 
 **Request Body:**
 ```json
@@ -68,7 +68,7 @@ Submit a new expense claim for processing.
 
 Retrieve status of a specific claim.
 
-**Endpoint:** GET `/claims/prove/status/{claimId}`
+**Endpoint:** GET `/students/prove/status/{claimId}`
 
 **Headers:**
 ```
