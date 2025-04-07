@@ -13,8 +13,10 @@ public type Claim record {|
 |};
 
 # Represents the response when querying the status of a claim
-# + message - Descriptive message about the claim status
-# + claim - The claim details if found, or nil if not found
+#
+# + message - Descriptive message about the claim status  
+# + claimId - claim ID  
+# + status - field description
 public type ClaimResponse record {|
     string message;
     string claimId;
