@@ -39,14 +39,12 @@ service / on new http:Listener(8080) {
             status: request.amount <= 10d ? STATUS_APPROVED : STATUS_PENDING
         };
         claims[claimId] = claim;
-
         if claim.status == STATUS_PENDING {
             email:Error? emailError = sendEmailNotifications(claim);
             if emailError is email:Error {
                 return error("Failed to send email notifications", emailError);
             }
         }
-		
         return {
             id: claim.id,
             status: claim.status
