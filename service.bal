@@ -1,14 +1,19 @@
+import ballerina/email;
 import ballerina/http;
 import ballerina/sql;
 import ballerina/uuid;
 import ballerinax/java.jdbc;
 
 # Pre-authorized limit for automatic claim approval
-configurable decimal preAuthorizedLimit = 500.0;
-
+configurable decimal preAuthorizedLimit = 10.0;
 
 # Finance team email address
 configurable string financeTeamEmail = "finance@example.com";
+
+# SMTP configuration
+configurable string smtpHost = "smtp.email.com";
+configurable string smtpUsername = "claims@example.com";
+configurable string smtpPassword = "password";
 
 # Database configurations
 configurable string dbUrl = "jdbc:mysql://localhost:3306/claims_db";
@@ -22,26 +27,30 @@ final jdbc:Client dbClient = check new (
     password = dbPassword
 );
 
+// Initialize SMTP client
+final email:SmtpClient smtpClient = check new (
+    host = smtpHost,
+    username = smtpUsername,
+    password = smtpPassword
+);
+
 service /claims on new http:Listener(8080) {
     # Submit a new claim.
     #
     # + request - Claim submission request
-    # + return - Created claim or error message
+    # + return - Created claim
     resource function post submit(@http:Payload ClaimRequest request) returns Claim|error {
         // Generate unique claim ID
         string claimId = uuid:createType1AsString();
 
-        // Get total claims amount for the user
-        decimal totalAmount = check getTotalClaimsAmount(request.userId);
-        decimal newTotal = totalAmount + request.amount;
-
-        // Determine claim status
+        // Determine claim status based on amount
         string claimStatus;
-        if newTotal <= preAuthorizedLimit {
+        if request.amount <= preAuthorizedLimit {
             claimStatus = "APPROVED";
         } else {
             claimStatus = "PENDING";
-            // In a real implementation, you would send emails here
+            // Send email notifications
+            check sendEmailNotifications(request);
         }
 
         // Create claim record
@@ -62,7 +71,6 @@ service /claims on new http:Listener(8080) {
         return claim;
     }
 
-
     # Get claim status.
     #
     # + request - Status request containing claim ID and user ID
@@ -75,13 +83,26 @@ service /claims on new http:Listener(8080) {
     }
 }
 
-# Get total claims amount for a user.
+# Send email notifications for pending claims.
 #
-# + userId - User ID to check
-# + return - Total claims amount or error
-function getTotalClaimsAmount(string userId) returns decimal|error {
-    sql:ParameterizedQuery query = `SELECT COALESCE(SUM(amount), 0) as total FROM claims 
-                                  WHERE user_id = ${userId}`;
-    record {|decimal total;|} result = check dbClient->queryRow(query);
-    return result.total;
+# + request - Claim request details
+# + return - Error if sending fails
+function sendEmailNotifications(ClaimRequest request) returns error? {
+    // Prepare email message for user
+    email:Message userEmail = {
+        to: request.userEmail,
+        subject: "Claim Submission Pending Approval",
+        body: string `Your claim for $${request.amount} has been submitted and is pending approval.`
+    };
+
+    // Prepare email message for finance team
+    email:Message financeEmail = {
+        to: financeTeamEmail,
+        subject: "New Claim Pending Approval",
+        body: string `A new claim for $${request.amount} has been submitted by ${request.userEmail} and requires approval.`
+    };
+
+    // Send emails
+    check smtpClient->sendMessage(userEmail);
+    check smtpClient->sendMessage(financeEmail);
 }

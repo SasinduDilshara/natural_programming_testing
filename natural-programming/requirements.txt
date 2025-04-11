@@ -1,0 +1,6 @@
+## Claim Management Platform
+Users can submit and track expense claims online.  
+Claims of $10 or less are automatically approved.  
+If the total exceeds $10, the claim is marked pending and an email is sent to the user and finance at `finance@example.com`.  
+The user receives the claim ID and its status in the response.  
+Only the user who submitted the claim can check its status using the claim ID.

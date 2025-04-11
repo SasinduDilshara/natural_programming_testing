@@ -1,34 +1,33 @@
-# Represents a claim submission request.
-#
-# + amount - The claim amount
-# + description - Description of the claim
-# + userId - ID of the user submitting the claim
+# Represents a claim request
 public type ClaimRequest record {|
+    # Amount of the claim
     decimal amount;
+    # Description of the claim
     string description;
+    # ID of the user submitting the claim
     string userId;
+    # Email of the user
+    string userEmail;
 |};
 
-# Represents a claim in the system.
-#
-# + id - Unique identifier for the claim
-# + amount - The claim amount
-# + description - Description of the claim
-# + status - Current status of the claim
-# + userId - ID of the user who submitted the claim
-public type Claim record {|
-    string id;
-    decimal amount;
-    string description;
-    string status;
-    string userId;
-|};
-
-# Represents a claim status request.
-#
-# + claimId - ID of the claim to check
-# + userId - ID of the user requesting the status
+# Represents a claim status request
 public type StatusRequest record {|
+    # ID of the claim to check
     string claimId;
+    # ID of the user requesting status
+    string userId;
+|};
+
+# Represents a claim
+public type Claim record {|
+    # Unique identifier for the claim
+    string id;
+    # Amount of the claim
+    decimal amount;
+    # Description of the claim
+    string description;
+    # Current status of the claim
+    string status;
+    # ID of the user who submitted the claim
     string userId;
 |};
