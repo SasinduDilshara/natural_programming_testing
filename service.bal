@@ -33,13 +33,13 @@ service /claims on new http:Listener(8080) {
         Claim claim = {
             id: claimId,
             amount: request.amount,
-            status: request.amount <= 10.0d ? "APPROVED" : "PENDING",
+            status: request.amount <= 10.0d ? APPROVED : PENDING,
             userId: request.userId
         };
 
         claims[claimId] = claim;
 
-        if claim.amount > 10.0d {
+        if claim.status == PENDING {
             email:Message emailMessage = {
                 'from: smtpUsername,
                 subject: "New Expense Claim Pending",
@@ -77,3 +77,8 @@ service /claims on new http:Listener(8080) {
         };
     }
 }
+
+enum Status {
+    PENDING,
+    APPROVED
+};
