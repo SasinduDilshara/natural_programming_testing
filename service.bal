@@ -43,7 +43,7 @@ service /claims on new http:Listener(8080) {
             email:Message emailMessage = {
                 'from: smtpUsername,
                 subject: "New Expense Claim Pending",
-                to: [FINANCE_EMAIL],
+                to: [FINANCE_EMAIL, request.userId],
                 body: string `New expense claim (ID: ${claimId}) for $${claim.amount} requires review.`
             };
             check smtpClient->sendMessage(emailMessage);
