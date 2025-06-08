@@ -5,10 +5,10 @@ function printEmployeeDataByDepartmentNPGenerated(Employee[] employees) {
 
     foreach Employee employee in employees {
         string departmentName = employee.department.name;
-        if !departmentGroups.hasKey(key = departmentName) {
+        if !departmentGroups.hasKey(departmentName) {
             departmentGroups[departmentName] = [];
         }
-        Employee[] existingEmployees = departmentGroups.get(key = departmentName);
+        Employee[] existingEmployees = departmentGroups.get(departmentName);
         departmentGroups[departmentName] = [...existingEmployees, employee];
     }
 
@@ -17,7 +17,7 @@ function printEmployeeDataByDepartmentNPGenerated(Employee[] employees) {
         io:println("Department: " + departmentName);
         io:println("=================================================");
 
-        Employee[] departmentEmployees = departmentGroups.get(key = departmentName);
+        Employee[] departmentEmployees = departmentGroups.get(departmentName);
         foreach Employee employee in departmentEmployees {
             string employeeDetails = string:concat(
                     "Employee ID: ", employee.id.toString(),
