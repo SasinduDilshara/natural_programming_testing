@@ -4,3 +4,9 @@ name = "hello_bi"
 version = "0.1.0"
 
 bi = true
+
+[[dependency]]
+org="ballerina"
+name="np"
+version="0.3.1"
+repository="local"
