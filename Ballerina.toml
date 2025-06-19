@@ -3,14 +3,8 @@ org = "wso2"
 name = "hello_bi"
 version = "0.1.0"
 
-[[dependency]]
-org="ballerina"
-name="np"
-version="0.3.1"
-repository="local"
-
-[[dependency]]
-org="ballerina"
-name="ai"
-version="1.0.0"
-repository="local"
+# [[dependency]]
+# org="ballerina"
+# name="np"
+# version="0.3.1"
+# repository="local"
